@@ -1,0 +1,74 @@
+{% extends 'main/base.html' %}
+{% block title %} Query books {% endblock %}
+
+{% load crispy_forms_tags %}
+
+{% block content %} 
+<h3>Query Books page</h3>
+<form method="post" action="/querybook/" class="form-group">
+    {% csrf_token %}
+    {{ form|crispy }}
+    <div class="input-group mb-3" style="margin-top: 20px;">
+        <div class="input-group-prepend" style="width: 50%;">
+            <label for="customRange3" class="form-label">Buy price (From - To)</label>
+            <br>
+            <div class="d-flex flex-row">
+                <output id="num1">0&nbsp;&nbsp;&nbsp;</output>
+                <input name="start_buy_price" type="range" class="form-range" min="0" max="200000" step="1000" value="0" id="customRange3" oninput="num1.value = this.value">
+            </div>
+            <br>
+            <div class="d-flex flex-row">
+                <input name="end_buy_price" type="range" class="form-range" min="0" max="200000" step="1000" value="200000" id="customRange4" oninput="num2.value = this.value">
+                <output id="num2">&nbsp;&nbsp;&nbsp;200000</output>
+            </div>
+            <br>
+            <label for="customRange5" class="form-label">Rent price (From - To)</label>
+            <br>
+            <div class="d-flex flex-row">
+                <output id="num3">0&nbsp;&nbsp;&nbsp;</output>
+                <input name="start_rent_price" type="range" class="form-range" min="0" max="200000" step="1000" value="0" id="customRange5" oninput="num3.value = this.value">
+            </div>
+            <br>
+            <div class="d-flex flex-row">
+                <input name="end_rent_price" type="range" class="form-range" min="0" max="200000" step="1000" value="200000" id="customRange6" oninput="num4.value = this.value">
+                <output id="num4">&nbsp;&nbsp;&nbsp;200000</output>
+            </div>
+            <br>
+            <button type="submit" name="filter" value="filter" class="btn btn-success">Filter</button>
+        </div>
+    </div>
+</form>
+<table class="table table-striped">
+    <thead>
+      <tr>
+        <th scope="col">ISBN</th>
+        <th scope="col">Title</th>
+        <th scope="col">Buy price</th>
+        <th scope="col">Rent price</th>
+        <th scope="col">Has e-book</th>
+      </tr>
+    </thead>
+    <tbody>
+        {% for book in books %}
+            <tr>
+                <th scope="row">{{ book.isbn }}</th>
+                <td>{{ book.book_name }}</td>
+                <td>{{ book.buy_price }}</td>
+                <td>{{ book.rent_price }}</td>
+                {% if book.has_digital %}
+                    <td>{{ True }}</td>
+                {% else %}
+                    <td>{{ False }}</td>
+                {% endif %}
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
+<script>
+    function numberWithCommas(x) {
+        console.log(x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","));
+        return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    }
+</script>
+
+{% endblock %}

@@ -1,0 +1,45 @@
+{% extends 'main/base.html' %}
+{% block title %} Insert new book {% endblock %}
+
+{% load crispy_forms_tags %}
+
+{% block content %} 
+<h3>Insert Book page</h3>
+<form method="post" action="/managebook/" class="form-group">
+    {% csrf_token %}
+    {{ form|crispy }}
+    <div class="input-group mb-3" style="margin-top: 20px;">
+        <div class="input-group-prepend">
+            <button type="submit" name="save" value="save_book" class="btn btn-success">Insert New Book</button>
+            <button type="submit" name="update" value="update_book" class="btn btn-success">Update Book</button>
+            <button type="submit" name="delete" value="delete_book" class="btn btn-success">Delete Book</button>
+        </div>
+    </div>
+</form>
+<table class="table table-striped">
+    <thead>
+      <tr>
+        <th scope="col">ISBN</th>
+        <th scope="col">Title</th>
+        <th scope="col">Buy price</th>
+        <th scope="col">Rent price</th>
+        <th scope="col">Has e-book</th>
+      </tr>
+    </thead>
+    <tbody>
+        {% for book in books %}
+            <tr>
+                <th scope="row">{{ book.isbn }}</th>
+                <td>{{ book.book_name }}</td>
+                <td>{{ book.buy_price }}</td>
+                <td>{{ book.rent_price }}</td>
+                {% if book.has_digital %}
+                    <td>{{ True }}</td>
+                {% else %}
+                    <td>{{ False }}</td>
+                {% endif %}
+            </tr>
+        {% endfor %}
+    </tbody>
+  </table>
+{% endblock %}
