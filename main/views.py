@@ -10,6 +10,7 @@ TF_MAPPING = {
     'False': 0,
     'Both': -1
 }
+
 # Create your views here.
 def index(request, id):
     return render(request, "main/home.html", {})
@@ -79,7 +80,6 @@ def queryBook(request):
 
             # Filter by has_digital
             if form.cleaned_data['has_digital']:
-                print(f"Has digital: {form.cleaned_data['has_digital']}")
                 has_digital = TF_MAPPING[form.cleaned_data['has_digital']]
                 if has_digital != -1:
                     try:
@@ -91,7 +91,7 @@ def queryBook(request):
                             pass
                 else:
                     books = Book.objects
-                    
+
             # Filter by buy price
             try:
                 books = books.filter(buy_price__gte=int(request.POST.get('start_buy_price')), 
@@ -108,6 +108,16 @@ def queryBook(request):
                 books = Book.objects.filter(rent_price__gte=int(request.POST.get('start_rent_price')), 
                                             rent_price__lte=int(request.POST.get('end_rent_price')))
 
+            # Sorted or not 
+            sort_opt = form.cleaned_data['sort']
+            if sort_opt != 'not_sort':
+                if form.cleaned_data['order'] == 'asc':
+                    books = books.order_by(sort_opt)
+                elif form.cleaned_data['order'] == 'desc':
+                    books = books.order_by('-'+sort_opt)
+            else:
+                pass
+            
             try:
                 books = books.all()
                 form = QueryBook()
