@@ -15,7 +15,6 @@ def register(request):
                                     password=form.cleaned_data['password1'],
                                     )
             login(request, new_user)
-            new_user.cart_set.create()
             messages.info(request, "Thanks for registering. You are now logged in.")
             return redirect("home")
         else:
